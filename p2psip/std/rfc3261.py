@@ -1551,7 +1551,7 @@ class Proxy(UserAgent):
         modify how the proxied request is generated. The caller must invoke sendRequest to send the returned request.'''
         if method != self.request.method: raise ValueError('method in createRequest must be same as original UAS for proxy')
         request = self.request.dup() # so that original is not modified
-        if not stateless and not self.transaction: # need to create a transaction
+        if not stateless and not self.transaction and method != 'ACK': # need to create a transaction
             self.transaction = Transaction.createServer(self.stack, self, self.request, self.stack.transport, self.stack.tag, start=False)
         if isinstance(dest, Address): request.uri = dest.uri.dup()
         elif isinstance(dest, tuple): request.uri = URI(request.uri.scheme + ':' + request.uri.user + '@' + dest[0] + ':' + str(dest[1]))
