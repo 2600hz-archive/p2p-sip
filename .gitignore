@@ -9,6 +9,7 @@
 *.egg-info
 dist
 build
+MANIFEST
 eggs
 parts
 bin

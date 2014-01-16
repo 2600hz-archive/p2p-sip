@@ -14,3 +14,9 @@ Pydev extension installed.
 
 --
 
+
+
+Packaged by Tim Behrsin <tim@behrsin.com>
+
+To install from PyPI: pip install p2psip
+
