@@ -1543,7 +1543,7 @@ class Proxy(UserAgent):
         if not self.transaction: # create a transaction if doesn't exist
             self.transaction = Transaction.createServer(self.stack, self, self.request, self.stack.transport, self.stack.tag, start=False)
         UserAgent.sendResponse(self, response, responsetext, content, contentType, False) # never create dialog
-        if self.request.method == 'INVITE' and 200 <= response.response < 300:
+        if self.request.method == 'INVITE' and ((200 <= response.response < 300) if isinstance(response, Message) else (200 <= response < 300)):
             self.transaction.close()
 
     def createRequest(self, method, dest, stateless=False, recordRoute=False, headers=(), route=()):
