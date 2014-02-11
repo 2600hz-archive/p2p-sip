@@ -510,7 +510,7 @@ class Stack(object):
                 except: pass # ignore error since m may be malformed.
 
     def _fixNatContact(self, m, src):
-        if m['Contact']:
+        if m['Contact'] and (m.first('Record-Route') is None or not 'lr' in m.first('Record-Route').value.uri.param):
             uri = m.first('Contact').value.uri
             if uri.scheme in ('sip', 'sips') and isIPv4(uri.host) and uri.host != src[0] and \
             not isLocal(src[0]) and not isLocal(uri.host) and isPrivate(uri.host) and not isPrivate(src[0]):
