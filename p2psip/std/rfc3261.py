@@ -494,11 +494,11 @@ class Stack(object):
                 if self.transport.type == 'tcp': # assume rport
                     via['rport'] = src[1]
                     via.viaUri.port = src[1]
-                if self.fix_nat and m.method in ('INVITE', 'MESSAGE'):
+                if (self.fix_nat(m) if callable(self.fix_nat) else self.fix_nat) and m.method in ('INVITE', 'MESSAGE'):
                     self._fixNatContact(m, src)
                 self._receivedRequest(m, uri)
             elif m.response: # response: call receivedResponse
-                if self.fix_nat and m['CSeq'] and m.CSeq.method in ('INVITE', 'MESSAGE'):
+                if (self.fix_nat(m) if callable(self.fix_nat) else self.fix_nat) and m['CSeq'] and m.CSeq.method in ('INVITE', 'MESSAGE'):
                     self._fixNatContact(m, src)
                 self._receivedResponse(m, uri)
             else: raise ValueError, 'Received invalid message'
@@ -510,7 +510,7 @@ class Stack(object):
                 except: pass # ignore error since m may be malformed.
 
     def _fixNatContact(self, m, src):
-        if m['Contact'] and (m.first('Record-Route') is None or not 'lr' in m.first('Record-Route').value.uri.param and not m.first('Record-Route').value.uri.param['nat'] == 'no'):
+        if m['Contact']:
             uri = m.first('Contact').value.uri
             if uri.scheme in ('sip', 'sips') and isIPv4(uri.host) and uri.host != src[0] and \
             not isLocal(src[0]) and not isLocal(uri.host) and isPrivate(uri.host) and not isPrivate(src[0]):
