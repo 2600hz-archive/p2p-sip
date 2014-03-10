@@ -63,13 +63,13 @@ if __name__ == '__main__': # hack to add other libraries in the sys.path
 
 import multitask
 from contextlib import closing
-from std import rfc3261
-from app import p2p, dht
-from std.rfc2396 import Address
-from std.rfc3261 import Stack, Message, Header, UserAgent, Proxy, TransportInfo
-from std.rfc2617 import createAuthenticate
-from std.kutil import getlocaladdr, Timer
-from app.p2p import ServerSocket, H
+from p2psip.std import rfc3261
+from p2psip.app import p2p, dht
+from p2psip.std.rfc2396 import Address
+from p2psip.std.rfc3261 import Stack, Message, Header, UserAgent, Proxy, TransportInfo
+from p2psip.std.rfc2617 import createAuthenticate
+from p2psip.std.kutil import getlocaladdr, Timer
+from p2psip.app.p2p import ServerSocket, H
 
 _debug = False
 

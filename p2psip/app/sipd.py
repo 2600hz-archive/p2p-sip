@@ -11,8 +11,8 @@ An examples from SER config file is at http://lists.iptel.org/pipermail/serusers
 '''
 
 import sys, logging
-from app import sipapi
-from std import rfc3261 
+from p2psip.app import sipapi
+from p2psip.std import rfc3261 
 from external import log
 
 logger = logging.getLogger('sipd')

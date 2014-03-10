@@ -8,7 +8,7 @@ if __name__ == '__main__': # hack to add other libraries in the sys.path
     sys.path += [f, os.path.join(f, 'external'), os.path.join(f, 'app')]
 
 import dht, p2p, dummycrypto as crypto
-from std.rfc2396 import isMulticast, isIPv4
+from p2psip.std.rfc2396 import isMulticast, isIPv4
 
 '''
 A graphical display of the DHT logs for ring-based DHT algorithms. The module follows

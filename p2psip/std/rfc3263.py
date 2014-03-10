@@ -52,7 +52,7 @@ if os.name == 'nt': # on windows import w32util and use RegistryResolve
 else: _nameservers = None
 
 import dns
-from std.rfc2396 import URI, isIPv4
+from p2psip.std.rfc2396 import URI, isIPv4
 
 _debug = False; # enable debug trace or not
 _resolver, _cache = None, {} # Name servers, resolver and DNS cache (plus negative cache)

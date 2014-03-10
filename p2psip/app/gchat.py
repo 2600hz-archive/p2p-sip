@@ -7,7 +7,7 @@ try: import readline
 except: readline = None
 
 import multitask
-from std import rfc3920, rfc3921
+from p2psip.std import rfc3920, rfc3921
 
 def recv(h):
     while True:

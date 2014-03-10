@@ -1,9 +1,9 @@
 # Copyright (c) 2007, Kundan Singh. All rights reserved. See LICENSING for details.
 
 import sys, time, hashlib, multitask, socket, struct, random, math, types, traceback, new
-from std.kutil import getlocaladdr
+from p2psip.std.kutil import getlocaladdr
 from dummycrypto import sign, verify, PublicKey, PrivateKey, extractPublicKey
-from std import rfc3489bis as util # we need _str2addr and addr2str. Move these to std.kutils
+from p2psip.std import rfc3489bis as util # we need _str2addr and addr2str. Move these to std.kutils
 
 '''
 A DHT implementation inspired by Bamboo DHT of OpenDHT.org.
