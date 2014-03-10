@@ -212,12 +212,12 @@ for simple applications.
 
 from __future__ import with_statement
 from contextlib import closing
-from p2psip.std.kutil import Timer, getlocaladdr, getintfaddr
-from p2psip.std.rfc2396 import URI, Address
-from p2psip.std.rfc4566 import SDP, attrs as format
-from p2psip.std.rfc3550 import Network as RTPNetwork, Session as RTPSession
-import std.rfc3261 as sip, std.rfc3264 as rfc3264, std.rfc3550 as rfc3550
-import std.rfc3489bis as stun
+from ..std.kutil import Timer, getlocaladdr, getintfaddr
+from ..std.rfc2396 import URI, Address
+from ..std.rfc4566 import SDP, attrs as format
+from ..std.rfc3550 import Network as RTPNetwork, Session as RTPSession
+import p2psip.std.rfc3261 as sip, std.rfc3264 as rfc3264, std.rfc3550 as rfc3550
+import p2psip.std.rfc3489bis as stun
 import sys, traceback, socket, multitask, random
 
 _debug = False  # set this to True to display all the debug messages.
