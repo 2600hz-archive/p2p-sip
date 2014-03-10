@@ -11,5 +11,4 @@ setup(
 	url = 'http://39peers.net',
 	license = 'GPL v3',
 	packages = ['p2psip', 'p2psip.app', 'p2psip.external', 'p2psip.std', 'p2psip.std.w3c', 'p2psip.tools' ],
-	data_files = [('', [ 'LICENSING', 'README.md' ])]
 )
