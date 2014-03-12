@@ -8,13 +8,14 @@ TODO: Should the script file be a top-level controller (like SER) or installable
 See the sipd.py module as an example on how to implement a SIP proxy and registrar server.
 '''
 
-import os, sys, socket, time, traceback, multitask, logging, re, base64, hashlib, struct
+import os, sys, socket, time, traceback, logging, re, base64, hashlib, struct
 from exceptions import Exception
-from ..std.rfc2396 import Address, URI
-from ..std.rfc3261 import Stack, Message, Header, UserAgent, Proxy, TransportInfo
-from ..std.rfc2617 import createAuthenticate
-from ..std.kutil import getlocaladdr, Timer
-from external import log
+from p2psip.external import multitask
+from p2psip.std.rfc2396 import Address, URI
+from p2psip.std.rfc3261 import Stack, Message, Header, UserAgent, Proxy, TransportInfo
+from p2psip.std.rfc2617 import createAuthenticate
+from p2psip.std.kutil import getlocaladdr, Timer
+from p2psip.external import log
 
 logger = logging.getLogger('sipapi')
 

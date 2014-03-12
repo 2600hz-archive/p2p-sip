@@ -2,11 +2,11 @@
 # @implements RFC3921 (XMPP IM and presence for client)
 # This is still incomplete
 
-import time, sys, select, multitask, traceback
+import time, sys, select, traceback
 if __name__ == '__main__': sys.path.append('../external'); sys.path.append('../std')
 from simplexml import XML, XMLList
-from p2psip.std.rfc3920 import Connection, JID, Stanza, bind, authenticate
-
+from rfc3920 import Connection, JID, Stanza, bind, authenticate
+from p2psip.external import multitask
 #------------------------------------------------------------------------------
 # Private utility definitions
 #------------------------------------------------------------------------------

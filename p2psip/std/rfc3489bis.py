@@ -10,8 +10,9 @@
 
 from __future__ import with_statement
 from contextlib import closing
-from p2psip.std.kutil import getlocaladdr
-import sys, traceback, struct, socket, multitask, random, time
+from kutil import getlocaladdr
+import sys, traceback, struct, socket, random, time
+from p2psip.external import multitask
 try:
     from os import urandom # urandom returns random bytes (str) of given length
 except:

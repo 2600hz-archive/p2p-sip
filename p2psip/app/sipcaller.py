@@ -117,7 +117,7 @@ monkey.patch_socket()
 from gevent.queue import Queue 
 import os, sys, re, traceback, socket, random, logging
 try: 
-    from p2psip.app import voip; from p2psip.std import rfc3261, rfc2396, rfc3550, rfc4566, kutil
+    from app import voip; from std import rfc3261, rfc2396, rfc3550, rfc4566, kutil
     from external import log
 except ImportError: print 'Please install p2p-sip and include p2p-sip/src and p2p-sip/src/external in your PYTHONPATH'; traceback.print_exc(); sys.exit(1)
 try: import audiodev, audiospeex, audioop

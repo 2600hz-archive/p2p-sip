@@ -1,12 +1,13 @@
 # Copyright (c) 2007-2008, Kundan Singh. All rights reserved. See LICENSING for details.
 # @implements RFC3920 (XMPP core for client)
 
-import time, sys, re, socket, select, base64, md5, multitask, traceback, random
+import time, sys, re, socket, select, base64, md5, traceback, random
 from xml.parsers import expat
-
+from p2psip.external import multitask
 if __name__ == '__main__': sys.path.append('../external')
 from simplexml import XML, XMLList, parser
-import dns, rfc3263, kutil
+import rfc3263, kutil
+from p2psip.external import dns
 
 _debug = False
 

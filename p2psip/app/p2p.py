@@ -15,14 +15,15 @@ For super/ordinary node, keep three levels of indirection:
   supernodeIds => IP:port (using DHT routing)
 '''
 
-import os, sys, traceback, socket, multitask, time, pickle, re, random, hashlib, struct, select
+import os, sys, traceback, socket, time, pickle, re, random, hashlib, struct, select
 from binascii import hexlify, unhexlify
-
-from . import dht, dummycrypto as crypto
-from .dht import Node, H, Hsize, Message
-from ..std.rfc3489bis import discoverBehavior, request, defaultServers, getlocaladdr
-from ..std.rfc2396 import URI
-from ..std.rfc2396 import isMulticast, isIPv4
+from p2psip.external import multitask
+import dht
+import dummycrypto as crypto
+from dht import Node, H, Hsize, Message
+from p2psip.std.rfc3489bis import discoverBehavior, request, defaultServers, getlocaladdr
+from p2psip.std.rfc2396 import URI
+from p2psip.std.rfc2396 import isMulticast, isIPv4
 
 BOOTSTRAP='boot.39peers.net' # address of the bootstrap server if any
 ADDRESS='224.0.1.2'          # multicast discovery address

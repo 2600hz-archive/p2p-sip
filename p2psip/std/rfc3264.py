@@ -8,8 +8,8 @@ The SDP offer/answer model for unicast sessions.
 Suppose the offerer wants to support PCMU and PCMA audio and H261 video, it can
 use the following code to generate the offer SDP.
 
-from p2psip.std.rfc4566 import SDP, attrs as format
-from p2psip.std.rfc3264 import createOffer, createAnswer
+from std.rfc4566 import SDP, attrs as format
+from std.rfc3264 import createOffer, createAnswer
 
 >>> audio = SDP.media(media='audio', port='9000')
 >>> audio.fmt = [format(pt=0, name='PCMU', rate=8000), format(pt=8, name='PCMA', rate=8000)]
@@ -25,8 +25,8 @@ v=0\\r\\no=- 1192000146 1192000146 IN IP4 192.168.1.66\\r\\ns=-\\r\\nt=0 0\\r\\n
 When the offer is received by the answerer, it can use the following code to generate
 the answer. Suppose the answerer wants to support PCMU and GSM audio and no video.
 
-from p2psip.std.rfc4566 import SDP, attrs as format
-from p2psip.std.rfc3264 import createAnswer
+from std.rfc4566 import SDP, attrs as format
+from std.rfc3264 import createAnswer
 >>> audio = SDP.media(media='audio', port='8020')
 >>> audio.fmt = [format(pt=0), format(pt=3)]  # for known payload types, description is optional
 >>> answer = createAnswer([audio], offer)
@@ -45,7 +45,7 @@ newOffer = createOffer([audio], offer)
 # @implements RFC3264 P1L27-P1L36
 # @implements RFC3264 P3L18-P3L21
 
-from p2psip.std.rfc4566 import SDP, attrs as format  # although RFC 3264 used old RFC 2327 for SDP definition, we use new RFC 4566
+from rfc4566 import SDP, attrs as format  # although RFC 3264 used old RFC 2327 for SDP definition, we use new RFC 4566
 
 _debug = True
 

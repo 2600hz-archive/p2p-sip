@@ -14,8 +14,8 @@ The Network class abstracts out the network behavior such as pair of sockets.
 # @implements RFC3550 P1L31-P1L50
 
 import os, sys, struct, random, math, time, socket, traceback
-from p2psip.std.kutil import getlocaladdr
-try: import multitask
+from kutil import getlocaladdr
+try: from p2psip.external import multitask
 except: print 'could not import multitask from rfc3550'
 
 _debug = False

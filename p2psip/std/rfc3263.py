@@ -47,12 +47,12 @@ if __name__ == '__main__': # hack to add other libraries in the sys.path
     f = os.path.dirname(sys.path.pop(0))
     sys.path.append(os.path.join(f, 'external'))
 if os.name == 'nt': # on windows import w32util and use RegistryResolve
-    import w32util
+    from p2psip.external import w32util
     _nameservers = w32util.RegistryResolve()
 else: _nameservers = None
 
-import dns
-from p2psip.std.rfc2396 import URI, isIPv4
+from p2psip.external import dns
+from rfc2396 import URI, isIPv4
 
 _debug = False; # enable debug trace or not
 _resolver, _cache = None, {} # Name servers, resolver and DNS cache (plus negative cache)

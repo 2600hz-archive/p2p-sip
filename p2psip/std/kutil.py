@@ -11,7 +11,7 @@ class Timer(object):
         self.app = app
         self.delay, self.running, self.gen = 0, False, None 
     def start(self, delay=None):
-        import multitask
+        from p2psip.external import multitask
         if self.running: self.stop() # stop previous one first.
         if delay is not None: self.delay = delay # set the new delay
         self.running = True
@@ -25,7 +25,7 @@ class Timer(object):
             self.gen = None
     def run(self):
         try:
-            import multitask
+            from p2psip.external import multitask
             yield multitask.sleep(self.delay / 1000.0)
             if self.running: self.app.timedout(self)
         except: pass # probably stopped before timeout
@@ -188,5 +188,5 @@ if __name__ == '__main__':
     app.t1 = t1
     app.t2 = t2
     
-    import multitask
+    from p2psip.external import multitask
     multitask.run()

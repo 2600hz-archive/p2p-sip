@@ -11,9 +11,9 @@ An examples from SER config file is at http://lists.iptel.org/pipermail/serusers
 '''
 
 import sys, logging
-from p2psip.app import sipapi
+import sipapi
 from p2psip.std import rfc3261 
-from external import log
+from p2psip.external import log
 
 logger = logging.getLogger('sipd')
 HP = lambda x: (x.partition(':')[0], int(x.partition(':')[2])) if ':' in x else (x, 5060) # convert "ip:port" to ("ip", port) and "ip" to ("ip", 5060)
