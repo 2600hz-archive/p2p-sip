@@ -9,7 +9,6 @@ p2p-sip/src/app/dummycrypto.py
 p2p-sip/src/app/gchat.py
 p2p-sip/src/app/opendht.py
 p2p-sip/src/app/p2p.py
-p2p-sip/src/app/p2psip.py
 p2p-sip/src/app/sipapi.py
 p2p-sip/src/app/sipcaller.py
 p2p-sip/src/app/sipd.py
