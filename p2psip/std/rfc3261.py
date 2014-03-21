@@ -8,7 +8,7 @@ In my code there is no performance optimization, if it hurts the style and
 compactness of the code.
 '''
 
-import re, socket, traceback, uuid
+import re, socket, traceback
 from kutil import getlocaladdr
 from rfc2396 import isIPv4, isMulticast, isLocal, isPrivate, URI, Address
 from rfc2617 import createAuthorization
@@ -238,20 +238,12 @@ class Message(object):
         # 8. Content-Length if present must match the length of body.
         # 9. mandatory headers are To, From, Call-ID and CSeq.
         # 10. syntax for top Via header and fields: ttl, maddr, received, branch.
-        indexCRLFCRLF, indexLFLF = value.find('\r\n\r\n'), value.find('\n\n')
-        firstheaders = body = ''
-        if indexCRLFCRLF >= 0 and indexLFLF >= 0:
-            if indexCRLFCRLF < indexLFLF: indexLFLF = -1
-            else: indexCRLFCRLF = -1
-        if indexCRLFCRLF >= 0:
-            firstheaders, body = value[:indexCRLFCRLF], value[indexCRLFCRLF+4:]
-        elif indexLFLF >= 0:
-            firstheaders, body = value[:indexLFLF], value[indexLFLF+2:]
-        else:
-            firstheaders, body = value, '' # assume no body
-        try: firstline, headers = firstheaders.split('\n', 1)
-        except: raise ValueError, 'No first line found'
-        if firstline[-1] == '\r': firstline = firstline[:-1]
+        try: firstheaders, body = value.split('\r\n\r\n', 1)
+        except ValueError: # may be \n\n
+            try: firstheaders, body = value.split('\n\n', 1)
+            except ValueError: firstheaders, body = value, '' # assume no body
+        try: firstline, headers = firstheaders.split('\r\n', 1)
+        except ValueError: firstline, headers = firstheaders.split('\n', 1)
         a, b, c = firstline.split(' ', 2)
         try:    # try as response
             self.response, self.responsetext, self.protocol = int(b), c, a # throws error if b is not int.
@@ -453,7 +445,7 @@ class Stack(object):
 
     @property
     def newCallId(self):
-        return str(uuid.uuid1()) + '@' + (self.transport.host or 'localhost')
+        return str(random.randint(0,2**31)) + '@' + (self.transport.host or 'localhost')
 
     def createVia(self, secure=False):
         if not self.transport: raise ValueError, 'No transport in stack'
@@ -494,11 +486,11 @@ class Stack(object):
                 if self.transport.type == 'tcp': # assume rport
                     via['rport'] = src[1]
                     via.viaUri.port = src[1]
-                if (self.fix_nat(m) if callable(self.fix_nat) else self.fix_nat) and m.method in ('INVITE', 'MESSAGE'):
+                if self.fix_nat and m.method in ('INVITE', 'MESSAGE'):
                     self._fixNatContact(m, src)
                 self._receivedRequest(m, uri)
             elif m.response: # response: call receivedResponse
-                if (self.fix_nat(m) if callable(self.fix_nat) else self.fix_nat) and m['CSeq'] and m.CSeq.method in ('INVITE', 'MESSAGE'):
+                if self.fix_nat and m['CSeq'] and m.CSeq.method in ('INVITE', 'MESSAGE'):
                     self._fixNatContact(m, src)
                 self._receivedResponse(m, uri)
             else: raise ValueError, 'Received invalid message'
@@ -946,15 +938,12 @@ class InviteServerTransaction(Transaction):
     def __init__(self):
         Transaction.__init__(self, True)
     def start(self):
-        self.retrans = 0
         self.state = 'proceeding'
         self.sendResponse(self.createResponse(100, 'Trying'))
         self.app.receivedRequest(self, self.request)
     def receivedRequest(self, request):
         if self.request.method == request.method: # retransmitted
             if self.state == 'proceeding' or self.state == 'completed':
-                self.retrans = self.retrans + 1
-                if _debug: print 'Retransmitting (#%d) INVITE[%s] response due to retransmission from remote endpoint'%(self.retrans, self.id)
                 self.stack.send(self.lastResponse, self.remote, self.transport)
         elif request.method == 'ACK':
             if self.state == 'completed':
@@ -969,8 +958,6 @@ class InviteServerTransaction(Transaction):
         if self.state == 'completed':
             if name == 'G':
                 self.startTimer('G', min(2*timeout, self.timer.T2))
-                self.retrans = self.retrans + 1
-                if _debug: print 'Retransmitting (#%d) INVITE[%s] response'%(self.retrans, self.id)
                 self.stack.send(self.lastResponse, self.remote, self.transport)
             elif name == 'H':
                 self.state = 'terminated'
@@ -984,12 +971,15 @@ class InviteServerTransaction(Transaction):
             self.state = 'terminated'
             self.app.error(self, error)
     def sendResponse(self, response):
-        self.retrans = 0
         self.lastResponse = response
         if response.is1xx:
             if self.state == 'proceeding' or self.state == 'trying':
                 self.stack.send(response, self.remote, self.transport)
-        else: # response.is2xx or failure
+        elif response.is2xx:
+            if self.state == 'proceeding' or self.state == 'trying':
+                self.state = 'terminated'
+                self.stack.send(response, self.remote, self.transport)
+        else: # failure
             if self.state == 'proceeding' or self.state == 'trying':
                 self.state = 'completed'
                 if not self.transport.reliable:
@@ -1339,7 +1329,7 @@ class Dialog(UserAgent):
             del d.routeSet[0]
             if len(d.routeSet) == 0: d.routeSet = None
         d.secure = request.uri.secure
-        d.localSeq, d.remoteSeq = 0, request.CSeq.number
+        d.localSeq, d.localSeq = 0, request.CSeq.number
         d.callId = request['Call-ID'].value
         d.localTag, d.remoteTag = response.To['tag'] or '', request.From['tag'] or ''
         d.localParty, d.remoteParty = Address(str(request.To.value)), Address(str(request.From.value))
@@ -1543,15 +1533,13 @@ class Proxy(UserAgent):
         if not self.transaction: # create a transaction if doesn't exist
             self.transaction = Transaction.createServer(self.stack, self, self.request, self.stack.transport, self.stack.tag, start=False)
         UserAgent.sendResponse(self, response, responsetext, content, contentType, False) # never create dialog
-        if self.request.method == 'INVITE' and ((200 <= response.response < 300) if isinstance(response, Message) else (200 <= response < 300)):
-            self.transaction.close()
 
     def createRequest(self, method, dest, stateless=False, recordRoute=False, headers=(), route=()):
         '''Create a proxied request from the original request, using destination (host, port). Additional arguments
         modify how the proxied request is generated. The caller must invoke sendRequest to send the returned request.'''
         if method != self.request.method: raise ValueError('method in createRequest must be same as original UAS for proxy')
         request = self.request.dup() # so that original is not modified
-        if not stateless and not self.transaction and method != 'ACK': # need to create a transaction
+        if not stateless and not self.transaction: # need to create a transaction
             self.transaction = Transaction.createServer(self.stack, self, self.request, self.stack.transport, self.stack.tag, start=False)
         if isinstance(dest, Address): request.uri = dest.uri.dup()
         elif isinstance(dest, tuple): request.uri = URI(request.uri.scheme + ':' + request.uri.user + '@' + dest[0] + ':' + str(dest[1]))
